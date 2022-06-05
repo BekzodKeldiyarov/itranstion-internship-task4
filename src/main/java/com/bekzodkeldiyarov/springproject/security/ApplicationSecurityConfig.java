@@ -1,20 +1,16 @@
 package com.bekzodkeldiyarov.springproject.security;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.bekzodkeldiyarov.springproject.service.MyUserDetailsService;
+import com.bekzodkeldiyarov.springproject.service.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 
 import javax.sql.DataSource;
 
@@ -22,36 +18,33 @@ import javax.sql.DataSource;
 @EnableWebSecurity
 public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    //    private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder;
+    private final MyUserDetailsService myUserDetailsService;
     private final DataSource dataSource;
 
-    public ApplicationSecurityConfig(DataSource dataSource) {
-
+    public ApplicationSecurityConfig(PasswordEncoder passwordEncoder, MyUserDetailsService userService, DataSource dataSource) {
+        this.passwordEncoder = passwordEncoder;
+        this.myUserDetailsService = userService;
         this.dataSource = dataSource;
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-                .csrf().disable()
-                .authorizeRequests()
-                .antMatchers("/register").permitAll()
-//                .anyRequest().authenticated()
-                .and()
-                .formLogin().permitAll()
-                .and()
-                .logout().permitAll();
+        http.csrf().disable().authorizeRequests().antMatchers("/register").permitAll().anyRequest().authenticated().and().formLogin().permitAll().and().logout().permitAll();
 
     }
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.jdbcAuthentication()
-                .dataSource(dataSource)
-                .passwordEncoder(NoOpPasswordEncoder.getInstance())
-                .usersByUsernameQuery("select username, password, active from usr where username=?")
-                .authoritiesByUsernameQuery("select u.username, ur.roles FROM usr u inner join user_role ur on u.id=ur.user_id WHERE u.username=?");
+        auth.authenticationProvider(daoAuthenticationProvider());
+    }
 
+    @Bean
+    public DaoAuthenticationProvider daoAuthenticationProvider() {
+        DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+        daoAuthenticationProvider.setPasswordEncoder(NoOpPasswordEncoder.getInstance()); //TODO make encryption of password
+        daoAuthenticationProvider.setUserDetailsService(myUserDetailsService);
 
+        return daoAuthenticationProvider;
     }
 }

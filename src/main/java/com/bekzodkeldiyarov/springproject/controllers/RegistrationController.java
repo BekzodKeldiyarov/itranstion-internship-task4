@@ -26,6 +26,7 @@ public class RegistrationController {
 
     @PostMapping("/register")
     public String addUser(User user) {
+        System.out.println(user);
         System.out.println("Inside post mapping");
         User userFromDB = userService.findUserByUsername(user.getUsername());
         if (userFromDB != null) {
@@ -33,6 +34,7 @@ public class RegistrationController {
             return "registration";
         }
         user.setActive(true);
+
         user.setRoles(Collections.singleton(Role.USER));
         user.setRegisterDate(LocalDate.now());
         userService.saveUser(user);

@@ -5,6 +5,8 @@ import com.bekzodkeldiyarov.springproject.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -31,5 +33,19 @@ public class UserService {
         User user = userRepository.findByUsername(username);
         user.setLastLoginDate(time);
         userRepository.save(user);
+    }
+
+    public List<User> findByIds(Long[] ids) {
+        List<User> users = userRepository.findUsersByIdIn(ids);
+        System.out.println(Arrays.toString(ids));
+        System.out.println(userRepository.findUsersByIdIn(ids));
+        System.out.println("Before returning to controller " + users);
+        return users;
+    }
+
+    public void saveUsers(List<User> users) {
+        System.out.println(users);
+        List<User> usersSaved = userRepository.saveAll(users);
+        System.out.println(usersSaved);
     }
 }
