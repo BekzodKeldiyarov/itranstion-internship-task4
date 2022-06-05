@@ -27,11 +27,26 @@ public class MainController {
         return "index";
     }
 
-    @PostMapping("/handle-main-form")
-    public String action(@RequestParam Long[] ids, @RequestParam String action) {
+    @PostMapping(value = "/handle-main-form", params = "action=unblock")
+    public String actionUnblock(@RequestParam Long[] ids) {
+        List<User> users = userService.findByIds(ids);
+        users.forEach(user -> user.setActive(true));
+        userService.saveUsers(users);
+        return "redirect:./";
+    }
+
+    @PostMapping(value = "/handle-main-form", params = "action=block")
+    public String actionBlock(@RequestParam Long[] ids) {
         List<User> users = userService.findByIds(ids);
         users.forEach(user -> user.setActive(false));
         userService.saveUsers(users);
+        return "redirect:./";
+    }
+    @PostMapping(value = "/handle-main-form", params = "action=delete")
+    public String actionDelete(@RequestParam Long[] ids) {
+        List<User> users = userService.findByIds(ids);
+
+        userService.deleteUsers(users);
         return "redirect:./";
     }
 }

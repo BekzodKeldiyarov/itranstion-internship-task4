@@ -37,15 +37,16 @@ public class UserService {
 
     public List<User> findByIds(Long[] ids) {
         List<User> users = userRepository.findUsersByIdIn(ids);
-        System.out.println(Arrays.toString(ids));
-        System.out.println(userRepository.findUsersByIdIn(ids));
-        System.out.println("Before returning to controller " + users);
         return users;
     }
 
     public void saveUsers(List<User> users) {
         System.out.println(users);
         List<User> usersSaved = userRepository.saveAll(users);
-        System.out.println(usersSaved);
+
+    }
+
+    public void deleteUsers(List<User> users) {
+        userRepository.deleteAll(users);
     }
 }
