@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Controller
 public class RegistrationController {
@@ -29,6 +30,7 @@ public class RegistrationController {
         }
         user.setActive(true);
         user.setRegisterDate(LocalDate.now());
+        user.setLastLoginDate(LocalDateTime.now());
         userService.saveUser(user);
         return "redirect:/login";
     }

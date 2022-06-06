@@ -44,7 +44,7 @@
                 <td th:text="${user.id}"></td>
                 <td th:text="${user.username}"></td>
                 <td th:text="${user.email}">email</td>
-                <td th:text="${user.lastLoginDate}">Last login date</td>
+                <td th:text="${user.lastLoginDate!=null} ? ${user.lastLoginDate} : 'none'">Last login date</td>
                 <td th:text="${user.registerDate}">Register time</td>
                 <td><span th:class="${user.active} ? 'badge bg-primary' : 'badge bg-danger'"
                           th:text="${user.active} ? 'Active' : 'Blocked'"></span></td>

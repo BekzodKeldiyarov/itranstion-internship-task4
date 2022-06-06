@@ -70,7 +70,9 @@ public class User {
 
     public String getLastLoginDate() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
+        if (lastLoginDate == null) {
+            return "none";
+        }
         return lastLoginDate.format(formatter);
     }
 
