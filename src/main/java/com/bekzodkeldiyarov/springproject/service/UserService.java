@@ -31,7 +31,7 @@ public class UserService {
 
     public void setLastLoginTime(String username, LocalDateTime time) {
         User user = userRepository.findByUsername(username);
-        user.setLastLoginDate(time);
+        user.setLastLoginDate(time);g
         userRepository.save(user);
     }
 
