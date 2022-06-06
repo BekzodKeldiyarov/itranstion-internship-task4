@@ -26,7 +26,7 @@ public class UserService {
     }
 
     public void saveUser(User user) {
-        System.out.println("Saved User: " + userRepository.save(user));
+        userRepository.save(user);
     }
 
     public void setLastLoginTime(String username, LocalDateTime time) {
@@ -47,10 +47,6 @@ public class UserService {
 
     public void deleteUsers(List<User> users) {
         userRepository.deleteAll(users);
-    }
-
-    public List<MyUserPrincipal> getAllActiveUsers() {
-        return activeUserService.getAllActiveUsers();
     }
 
     public void refreshUserSession() {

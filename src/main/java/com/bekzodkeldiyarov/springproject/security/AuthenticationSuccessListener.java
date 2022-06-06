@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @Component
 public class AuthenticationSuccessListener implements ApplicationListener<InteractiveAuthenticationSuccessEvent> {
 
-    UserService userService;
+    private final UserService userService;
 
     public AuthenticationSuccessListener(UserService userService) {
         this.userService = userService;

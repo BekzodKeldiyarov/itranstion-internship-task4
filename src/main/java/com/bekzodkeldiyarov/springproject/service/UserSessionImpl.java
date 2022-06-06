@@ -19,17 +19,6 @@ public class UserSessionImpl implements UserSessionService {
     }
 
     @Override
-    public List<MyUserPrincipal> getAllActiveUsers() {
-        List<Object> principals = sessionRegistry.getAllPrincipals();
-        List<MyUserPrincipal> userDetailsList = new ArrayList<>();
-        for (Object principal : principals) {
-            if (principal instanceof MyUserPrincipal) {
-                userDetailsList.add((MyUserPrincipal) principal);
-            }
-        }
-        return userDetailsList;
-    }
-
     public void expireSessionForNonActiveUsers() {
         List<Object> principals = sessionRegistry.getAllPrincipals();
         for (Object principal : principals) {

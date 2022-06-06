@@ -50,12 +50,4 @@ public class MainController {
         userService.refreshUserSession();
         return "redirect:./";
     }
-//
-//    @GetMapping("/active-users")
-//    public String getActiveUsers(Model model) {
-//        List<MyUserPrincipal> users = userService.getAllActiveUsers();
-////        model.addAttribute("users", users);
-//        return "index";
-//    }
-
 }
