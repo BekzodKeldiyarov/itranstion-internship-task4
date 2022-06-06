@@ -9,8 +9,12 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.session.SessionRegistry;
+import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 
 import javax.sql.DataSource;
 
@@ -30,7 +34,18 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable().authorizeRequests().antMatchers("/register").permitAll().anyRequest().authenticated().and().formLogin().permitAll().and().logout().permitAll();
+        http
+                .csrf().disable()
+                .authorizeRequests()
+                .antMatchers("/register").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .formLogin().permitAll()
+                .and().logout().permitAll()
+                .and()
+                .sessionManagement()
+                .maximumSessions(-1).sessionRegistry(sessionRegistry())
+                .expiredUrl("/login");
 
     }
 
@@ -46,5 +61,16 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
         daoAuthenticationProvider.setUserDetailsService(myUserDetailsService);
 
         return daoAuthenticationProvider;
+    }
+
+
+    @Bean
+    SessionRegistry sessionRegistry() {
+        return new SessionRegistryImpl();
+    }
+
+    @Bean
+    public HttpSessionEventPublisher httpSessionEventPublisher() {
+        return new HttpSessionEventPublisher();
     }
 }

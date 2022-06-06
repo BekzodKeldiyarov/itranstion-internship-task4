@@ -5,15 +5,15 @@ import com.bekzodkeldiyarov.springproject.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Service
 public class UserService {
+    private final UserSessionService activeUserService;
     private final UserRepository userRepository;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserSessionService activeUserService, UserRepository userRepository) {
+        this.activeUserService = activeUserService;
         this.userRepository = userRepository;
     }
 
@@ -36,17 +36,24 @@ public class UserService {
     }
 
     public List<User> findByIds(Long[] ids) {
-        List<User> users = userRepository.findUsersByIdIn(ids);
-        return users;
+        return userRepository.findUsersByIdIn(ids);
+
     }
 
     public void saveUsers(List<User> users) {
-        System.out.println(users);
-        List<User> usersSaved = userRepository.saveAll(users);
-
+        userRepository.saveAll(users);
     }
+
 
     public void deleteUsers(List<User> users) {
         userRepository.deleteAll(users);
+    }
+
+    public List<MyUserPrincipal> getAllActiveUsers() {
+        return activeUserService.getAllActiveUsers();
+    }
+
+    public void refreshUserSession() {
+        activeUserService.expireSessionForNonActiveUsers();
     }
 }

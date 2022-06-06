@@ -7,9 +7,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Controller
@@ -28,25 +26,36 @@ public class MainController {
     }
 
     @PostMapping(value = "/handle-main-form", params = "action=unblock")
-    public String actionUnblock(@RequestParam Long[] ids) {
+    public String actionUnblock(@RequestParam(required = false) Long[] ids) {
         List<User> users = userService.findByIds(ids);
         users.forEach(user -> user.setActive(true));
         userService.saveUsers(users);
+        userService.refreshUserSession();
         return "redirect:./";
     }
 
     @PostMapping(value = "/handle-main-form", params = "action=block")
-    public String actionBlock(@RequestParam Long[] ids) {
+    public String actionBlock(@RequestParam(required = false) Long[] ids) {
         List<User> users = userService.findByIds(ids);
         users.forEach(user -> user.setActive(false));
         userService.saveUsers(users);
+        userService.refreshUserSession();
         return "redirect:./";
     }
-    @PostMapping(value = "/handle-main-form", params = "action=delete")
-    public String actionDelete(@RequestParam Long[] ids) {
-        List<User> users = userService.findByIds(ids);
 
+    @PostMapping(value = "/handle-main-form", params = "action=delete")
+    public String actionDelete(@RequestParam(required = false) Long[] ids) {
+        List<User> users = userService.findByIds(ids);
         userService.deleteUsers(users);
+        userService.refreshUserSession();
         return "redirect:./";
     }
+//
+//    @GetMapping("/active-users")
+//    public String getActiveUsers(Model model) {
+//        List<MyUserPrincipal> users = userService.getAllActiveUsers();
+////        model.addAttribute("users", users);
+//        return "index";
+//    }
+
 }

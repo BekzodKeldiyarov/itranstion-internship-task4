@@ -3,6 +3,7 @@ package com.bekzodkeldiyarov.springproject.entity;
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Date;
 import java.util.Set;
 
@@ -79,8 +80,10 @@ public class User {
         this.registerDate = registerDate;
     }
 
-    public LocalDateTime getLastLoginDate() {
-        return lastLoginDate;
+    public String getLastLoginDate() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+
+        return lastLoginDate.format(formatter);
     }
 
     public void setLastLoginDate(LocalDateTime lastLoginDate) {

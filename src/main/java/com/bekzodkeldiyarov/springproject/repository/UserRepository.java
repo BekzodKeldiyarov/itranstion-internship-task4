@@ -15,7 +15,4 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findUsersByIdIn(Long[] ids);
 
     User save(User user);
-
-
-
 }
