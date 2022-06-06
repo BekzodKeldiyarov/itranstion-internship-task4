@@ -22,12 +22,10 @@ import javax.sql.DataSource;
 @EnableWebSecurity
 public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final PasswordEncoder passwordEncoder;
     private final MyUserDetailsService myUserDetailsService;
     private final DataSource dataSource;
 
-    public ApplicationSecurityConfig(PasswordEncoder passwordEncoder, MyUserDetailsService userService, DataSource dataSource) {
-        this.passwordEncoder = passwordEncoder;
+    public ApplicationSecurityConfig(MyUserDetailsService userService, DataSource dataSource) {
         this.myUserDetailsService = userService;
         this.dataSource = dataSource;
     }
@@ -57,12 +55,11 @@ public class ApplicationSecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     public DaoAuthenticationProvider daoAuthenticationProvider() {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-        daoAuthenticationProvider.setPasswordEncoder(NoOpPasswordEncoder.getInstance()); //TODO make encryption of password
+        daoAuthenticationProvider.setPasswordEncoder(NoOpPasswordEncoder.getInstance());
         daoAuthenticationProvider.setUserDetailsService(myUserDetailsService);
 
         return daoAuthenticationProvider;
     }
-
 
     @Bean
     SessionRegistry sessionRegistry() {
